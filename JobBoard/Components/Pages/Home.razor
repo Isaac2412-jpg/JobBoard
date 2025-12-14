@@ -1,7 +1,22 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject JobBoard.Components.Auth.SimpleAuthService Auth
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, User!</h1>
+@if (!Auth.IsLoggedIn)
+{
+    <h1>Hello, User!</h1>
+    <p>
+        Please press Login if you already have an account.
+    </p>
 
-Please press Login if you already have an account, if not please press Register
+    <a class="btn btn-primary" href="/login">Login</a>
+}
+else
+{
+    <h1>Welcome!</h1>
+    <p>
+        You are logged in as <strong>@Auth.CurrentUserEmail</strong>
+    </p>
+}

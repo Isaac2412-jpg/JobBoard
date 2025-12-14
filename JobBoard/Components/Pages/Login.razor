@@ -1,0 +1,48 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+
+@inject JobBoard.Components.Auth.SimpleAuthService Auth
+@inject NavigationManager Nav
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<div class="mb-3">
+    <label class="form-label">Email</label>
+    <input class="form-control" @bind="email" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-control" @bind="password" />
+</div>
+
+<button class="btn btn-primary" @onclick="HandleLogin">
+    Login
+</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p class="text-danger mt-2">@errorMessage</p>
+}
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string errorMessage = "";
+
+    private void HandleLogin()
+    {
+        var success = Auth.Login(email, password);
+
+        if (success)
+        {
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid email or password";
+        }
+    }
+}
