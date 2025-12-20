@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobBoard.Migrations
 {
     [DbContext(typeof(JobBoardContext))]
-    [Migration("20251220083853_Initial")]
+    [Migration("20251220100939_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
