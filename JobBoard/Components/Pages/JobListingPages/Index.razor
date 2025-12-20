@@ -1,0 +1,44 @@
+﻿@page "/joblistings"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using JobBoard.Components.Domain
+@using JobBoard.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="joblistings/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.JobListing">
+    <PropertyColumn Property="joblisting => joblisting.Title" />
+    <PropertyColumn Property="joblisting => joblisting.JobType" />
+    <PropertyColumn Property="joblisting => joblisting.Industry" />
+    <PropertyColumn Property="joblisting => joblisting.Salary" />
+    <PropertyColumn Property="joblisting => joblisting.Location" />
+    <PropertyColumn Property="joblisting => joblisting.Description" />
+    <PropertyColumn Property="joblisting => joblisting.Requirements" />
+    <PropertyColumn Property="joblisting => joblisting.DatePosted" />
+    <PropertyColumn Property="joblisting => joblisting.EmployerId" />
+
+    <TemplateColumn Context="joblisting">
+        <a href="@($"joblistings/edit?id={joblisting.Id}")">Edit</a> |
+        <a href="@($"joblistings/details?id={joblisting.Id}")">Details</a> |
+        <a href="@($"joblistings/delete?id={joblisting.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private JobBoardContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,84 @@
+﻿@page "/joblistings/create"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>JobListing</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="JobListing" OnValidSubmit="AddJobListing" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="JobListing.Title" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="jobtype" class="form-label">JobType:</label> 
+                <InputText id="jobtype" @bind-Value="JobListing.JobType" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.JobType" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="industry" class="form-label">Industry:</label> 
+                <InputText id="industry" @bind-Value="JobListing.Industry" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Industry" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="salary" class="form-label">Salary:</label> 
+                <InputNumber id="salary" @bind-Value="JobListing.Salary" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Salary" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="location" class="form-label">Location:</label> 
+                <InputText id="location" @bind-Value="JobListing.Location" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Location" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="JobListing.Description" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Description" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="requirements" class="form-label">Requirements:</label> 
+                <InputText id="requirements" @bind-Value="JobListing.Requirements" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.Requirements" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateposted" class="form-label">DatePosted:</label> 
+                <InputDate id="dateposted" @bind-Value="JobListing.DatePosted" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.DatePosted" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="employerid" class="form-label">EmployerId:</label> 
+                <InputNumber id="employerid" @bind-Value="JobListing.EmployerId" class="form-control" /> 
+                <ValidationMessage For="() => JobListing.EmployerId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/joblistings">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private JobListing JobListing { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddJobListing()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.JobListing.Add(JobListing);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/joblistings");
+    }
+}

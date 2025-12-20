@@ -1,0 +1,74 @@
+﻿@page "/jobseekers/create"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>JobSeeker</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="JobSeeker" OnValidSubmit="AddJobSeeker" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="JobSeeker.Name" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label> 
+                <InputText id="email" @bind-Value="JobSeeker.Email" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.Email" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="educationlevel" class="form-label">EducationLevel:</label> 
+                <InputText id="educationlevel" @bind-Value="JobSeeker.EducationLevel" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.EducationLevel" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="resumepath" class="form-label">ResumePath:</label> 
+                <InputText id="resumepath" @bind-Value="JobSeeker.ResumePath" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.ResumePath" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="linkedinpath" class="form-label">LinkedInPath:</label> 
+                <InputText id="linkedinpath" @bind-Value="JobSeeker.LinkedInPath" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.LinkedInPath" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="experience" class="form-label">Experience:</label> 
+                <InputText id="experience" @bind-Value="JobSeeker.Experience" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.Experience" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="JobSeeker.UserId" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.UserId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/jobseekers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private JobSeeker JobSeeker { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddJobSeeker()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.JobSeeker.Add(JobSeeker);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/jobseekers");
+    }
+}

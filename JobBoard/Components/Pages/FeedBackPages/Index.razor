@@ -1,0 +1,38 @@
+﻿@page "/feedbacks"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using JobBoard.Components.Domain
+@using JobBoard.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="feedbacks/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.FeedBack">
+    <PropertyColumn Property="feedback => feedback.Message" />
+    <PropertyColumn Property="feedback => feedback.DateSubmitted" />
+    <PropertyColumn Property="feedback => feedback.UserId" />
+
+    <TemplateColumn Context="feedback">
+        <a href="@($"feedbacks/edit?id={feedback.Id}")">Edit</a> |
+        <a href="@($"feedbacks/details?id={feedback.Id}")">Details</a> |
+        <a href="@($"feedbacks/delete?id={feedback.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private JobBoardContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

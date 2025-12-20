@@ -1,0 +1,99 @@
+﻿@page "/feedbacks/edit"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>FeedBack</h2>
+<hr />
+@if (FeedBack is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="FeedBack" OnValidSubmit="UpdateFeedBack" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="FeedBack.Id" value="@FeedBack.Id" />
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message:</label>
+                    <InputText id="message" @bind-Value="FeedBack.Message" class="form-control" />
+                    <ValidationMessage For="() => FeedBack.Message" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datesubmitted" class="form-label">DateSubmitted:</label>
+                    <InputDate id="datesubmitted" @bind-Value="FeedBack.DateSubmitted" class="form-control" />
+                    <ValidationMessage For="() => FeedBack.DateSubmitted" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="FeedBack.UserId" class="form-control" />
+                    <ValidationMessage For="() => FeedBack.UserId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/feedbacks">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private FeedBack? FeedBack { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        FeedBack ??= await context.FeedBack.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (FeedBack is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateFeedBack()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(FeedBack!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!FeedBackExists(FeedBack!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/feedbacks");
+    }
+
+    private bool FeedBackExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.FeedBack.Any(e => e.Id == id);
+    }
+}

@@ -2,21 +2,21 @@
 {
     public class JobListing : BaseDomainModel
     {
-        public required string Title { get; set; }
+        public  string Title { get; set; }
 
-        public required string JobType { get; set; }
+        public  string JobType { get; set; }
         
-        public required string Industry { get; set; }
+        public  string Industry { get; set; }
         
-        public required int Salary { get; set; }
+        public int Salary { get; set; }
 
-        public required string Location { get; set; }
+        public string Location { get; set; }
 
-        public required string Description { get; set; }
+        public string Description { get; set; }
 
-        public required string Requirements { get; set; }
+        public string Requirements { get; set; }
 
-        public DateTime DatePosted { get; set; }
+        public DateTime DatePosted { get; set; } 
 
         public int EmployerId { get; set; }
     }

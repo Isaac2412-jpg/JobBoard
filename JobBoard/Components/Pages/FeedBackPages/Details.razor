@@ -1,0 +1,50 @@
+﻿@page "/feedbacks/details"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>FeedBack</h2>
+    <hr />
+    @if (feedback is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Message</dt>
+            <dd class="col-sm-10">@feedback.Message</dd>
+            <dt class="col-sm-2">DateSubmitted</dt>
+            <dd class="col-sm-10">@feedback.DateSubmitted</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@feedback.UserId</dd>
+        </dl>
+        <div>
+            <a href="@($"/feedbacks/edit?id={feedback.Id}")">Edit</a> |
+            <a href="@($"/feedbacks")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private FeedBack? feedback;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        feedback = await context.FeedBack.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (feedback is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

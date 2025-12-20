@@ -1,0 +1,119 @@
+﻿@page "/jobseekers/edit"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>JobSeeker</h2>
+<hr />
+@if (JobSeeker is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="JobSeeker" OnValidSubmit="UpdateJobSeeker" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="JobSeeker.Id" value="@JobSeeker.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="JobSeeker.Name" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="JobSeeker.Email" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.Email" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="educationlevel" class="form-label">EducationLevel:</label>
+                    <InputText id="educationlevel" @bind-Value="JobSeeker.EducationLevel" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.EducationLevel" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="resumepath" class="form-label">ResumePath:</label>
+                    <InputText id="resumepath" @bind-Value="JobSeeker.ResumePath" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.ResumePath" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="linkedinpath" class="form-label">LinkedInPath:</label>
+                    <InputText id="linkedinpath" @bind-Value="JobSeeker.LinkedInPath" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.LinkedInPath" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Experience:</label>
+                    <InputText id="experience" @bind-Value="JobSeeker.Experience" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.Experience" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="JobSeeker.UserId" class="form-control" />
+                    <ValidationMessage For="() => JobSeeker.UserId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/jobseekers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private JobSeeker? JobSeeker { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        JobSeeker ??= await context.JobSeeker.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (JobSeeker is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateJobSeeker()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(JobSeeker!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!JobSeekerExists(JobSeeker!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/jobseekers");
+    }
+
+    private bool JobSeekerExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.JobSeeker.Any(e => e.Id == id);
+    }
+}

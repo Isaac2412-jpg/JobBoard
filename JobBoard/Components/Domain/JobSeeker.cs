@@ -2,11 +2,11 @@
 {
     public class JobSeeker : BaseDomainModel
     {
-        public required string Name { get; set; }
+        public string Name { get; set; }
         
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
-        public required string EducationLevel { get; set; }
+        public string EducationLevel { get; set; }
 
         public string? ResumePath { get; set; }
 

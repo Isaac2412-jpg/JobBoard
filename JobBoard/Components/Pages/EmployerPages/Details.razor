@@ -1,0 +1,58 @@
+﻿@page "/employers/details"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Employer</h2>
+    <hr />
+    @if (employer is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CompanyName</dt>
+            <dd class="col-sm-10">@employer.CompanyName</dd>
+            <dt class="col-sm-2">CompanyEmail</dt>
+            <dd class="col-sm-10">@employer.CompanyEmail</dd>
+            <dt class="col-sm-2">CompanyLogoPath</dt>
+            <dd class="col-sm-10">@employer.CompanyLogoPath</dd>
+            <dt class="col-sm-2">Industry</dt>
+            <dd class="col-sm-10">@employer.Industry</dd>
+            <dt class="col-sm-2">Location</dt>
+            <dd class="col-sm-10">@employer.Location</dd>
+            <dt class="col-sm-2">WebsiteUrl</dt>
+            <dd class="col-sm-10">@employer.WebsiteUrl</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@employer.UserId</dd>
+        </dl>
+        <div>
+            <a href="@($"/employers/edit?id={employer.Id}")">Edit</a> |
+            <a href="@($"/employers")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Employer? employer;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        employer = await context.Employer.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (employer is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

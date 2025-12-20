@@ -1,0 +1,119 @@
+﻿@page "/employers/edit"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Employer</h2>
+<hr />
+@if (Employer is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Employer" OnValidSubmit="UpdateEmployer" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Employer.Id" value="@Employer.Id" />
+                <div class="mb-3">
+                    <label for="companyname" class="form-label">CompanyName:</label>
+                    <InputText id="companyname" @bind-Value="Employer.CompanyName" class="form-control" />
+                    <ValidationMessage For="() => Employer.CompanyName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="companyemail" class="form-label">CompanyEmail:</label>
+                    <InputText id="companyemail" @bind-Value="Employer.CompanyEmail" class="form-control" />
+                    <ValidationMessage For="() => Employer.CompanyEmail" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="companylogopath" class="form-label">CompanyLogoPath:</label>
+                    <InputText id="companylogopath" @bind-Value="Employer.CompanyLogoPath" class="form-control" />
+                    <ValidationMessage For="() => Employer.CompanyLogoPath" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="industry" class="form-label">Industry:</label>
+                    <InputText id="industry" @bind-Value="Employer.Industry" class="form-control" />
+                    <ValidationMessage For="() => Employer.Industry" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location:</label>
+                    <InputText id="location" @bind-Value="Employer.Location" class="form-control" />
+                    <ValidationMessage For="() => Employer.Location" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="websiteurl" class="form-label">WebsiteUrl:</label>
+                    <InputText id="websiteurl" @bind-Value="Employer.WebsiteUrl" class="form-control" />
+                    <ValidationMessage For="() => Employer.WebsiteUrl" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="Employer.UserId" class="form-control" />
+                    <ValidationMessage For="() => Employer.UserId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/employers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Employer? Employer { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Employer ??= await context.Employer.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Employer is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateEmployer()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Employer!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!EmployerExists(Employer!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/employers");
+    }
+
+    private bool EmployerExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Employer.Any(e => e.Id == id);
+    }
+}

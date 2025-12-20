@@ -1,0 +1,129 @@
+﻿@page "/joblistings/edit"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>JobListing</h2>
+<hr />
+@if (JobListing is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="JobListing" OnValidSubmit="UpdateJobListing" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="JobListing.Id" value="@JobListing.Id" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <InputText id="title" @bind-Value="JobListing.Title" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Title" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="jobtype" class="form-label">JobType:</label>
+                    <InputText id="jobtype" @bind-Value="JobListing.JobType" class="form-control" />
+                    <ValidationMessage For="() => JobListing.JobType" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="industry" class="form-label">Industry:</label>
+                    <InputText id="industry" @bind-Value="JobListing.Industry" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Industry" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="salary" class="form-label">Salary:</label>
+                    <InputNumber id="salary" @bind-Value="JobListing.Salary" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Salary" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location:</label>
+                    <InputText id="location" @bind-Value="JobListing.Location" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Location" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="JobListing.Description" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Description" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">Requirements:</label>
+                    <InputText id="requirements" @bind-Value="JobListing.Requirements" class="form-control" />
+                    <ValidationMessage For="() => JobListing.Requirements" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateposted" class="form-label">DatePosted:</label>
+                    <InputDate id="dateposted" @bind-Value="JobListing.DatePosted" class="form-control" />
+                    <ValidationMessage For="() => JobListing.DatePosted" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="employerid" class="form-label">EmployerId:</label>
+                    <InputNumber id="employerid" @bind-Value="JobListing.EmployerId" class="form-control" />
+                    <ValidationMessage For="() => JobListing.EmployerId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/joblistings">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private JobListing? JobListing { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        JobListing ??= await context.JobListing.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (JobListing is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateJobListing()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(JobListing!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!JobListingExists(JobListing!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/joblistings");
+    }
+
+    private bool JobListingExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.JobListing.Any(e => e.Id == id);
+    }
+}

@@ -1,0 +1,52 @@
+﻿@page "/applications/details"
+@using Microsoft.EntityFrameworkCore
+@using JobBoard.Components.Domain
+@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Application</h2>
+    <hr />
+    @if (application is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DateApplied</dt>
+            <dd class="col-sm-10">@application.DateApplied</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@application.Status</dd>
+            <dt class="col-sm-2">JobListingId</dt>
+            <dd class="col-sm-10">@application.JobListingId</dd>
+            <dt class="col-sm-2">JobSeekerId</dt>
+            <dd class="col-sm-10">@application.JobSeekerId</dd>
+        </dl>
+        <div>
+            <a href="@($"/applications/edit?id={application.Id}")">Edit</a> |
+            <a href="@($"/applications")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Application? application;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        application = await context.Application.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (application is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

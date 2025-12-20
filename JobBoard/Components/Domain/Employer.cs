@@ -1,18 +1,18 @@
 ﻿namespace JobBoard.Components.Domain
 {
-    public class Employer
+    public class Employer : BaseDomainModel
     {
-        public  required string CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
-        public required string CompanyEmail { get; set; }
+        public string CompanyEmail { get; set; }
 
         public string? CompanyLogoPath { get; set; }
 
-        public required string Industry { get; set; }
+        public  string Industry { get; set; }
 
-        public required string Location { get; set; }
+        public string Location { get; set; }
 
-        public required string WebsiteUrl { get; set; }
+        public string WebsiteUrl { get; set; }
 
         public int UserId { get; set; }
     }   
