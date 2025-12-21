@@ -46,9 +46,9 @@
                 <ValidationMessage For="() => JobSeeker.Experience" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="userid" class="form-label">UserId:</label> 
-                <InputNumber id="userid" @bind-Value="JobSeeker.UserId" class="form-control" /> 
-                <ValidationMessage For="() => JobSeeker.UserId" class="text-danger" /> 
+                <label for="identityuserid" class="form-label">IdentityUserId:</label> 
+                <InputText id="identityuserid" @bind-Value="JobSeeker.IdentityUserId" class="form-control" /> 
+                <ValidationMessage For="() => JobSeeker.IdentityUserId" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>

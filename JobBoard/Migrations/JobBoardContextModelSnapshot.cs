@@ -36,13 +36,18 @@ namespace JobBoard.Migrations
                     b.Property<int>("JobListingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("JobSeekerId")
-                        .HasColumnType("int");
+                    b.Property<string>("JobSeekerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JobListingId");
+
+                    b.HasIndex("JobSeekerId");
 
                     b.ToTable("Application");
 
@@ -50,17 +55,17 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 1,
-                            DateApplied = new DateTime(2025, 12, 16, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(943),
+                            DateApplied = new DateTime(2025, 12, 16, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7021),
                             JobListingId = 1,
-                            JobSeekerId = 3,
+                            JobSeekerId = "11111111-2222-3333-4444-555555555555",
                             Status = "Pending"
                         },
                         new
                         {
                             Id = 2,
-                            DateApplied = new DateTime(2025, 12, 19, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(969),
+                            DateApplied = new DateTime(2025, 12, 19, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7042),
                             JobListingId = 2,
-                            JobSeekerId = 4,
+                            JobSeekerId = "22222222-3333-4444-5555-666666666666",
                             Status = "Reviewed"
                         });
                 });
@@ -84,6 +89,10 @@ namespace JobBoard.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Industry")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -92,14 +101,16 @@ namespace JobBoard.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("WebsiteUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employer");
 
@@ -109,9 +120,9 @@ namespace JobBoard.Migrations
                             Id = 1,
                             CompanyEmail = "contact@techcorp.com",
                             CompanyName = "TechCorp",
+                            IdentityUserId = "33333333-4444-5555-6666-777777777777",
                             Industry = "Software",
                             Location = "New York, NY",
-                            UserId = 2,
                             WebsiteUrl = "https://techcorp.com"
                         },
                         new
@@ -119,9 +130,9 @@ namespace JobBoard.Migrations
                             Id = 2,
                             CompanyEmail = "info@healthplus.com",
                             CompanyName = "HealthPlus",
+                            IdentityUserId = "44444444-5555-6666-7777-888888888888",
                             Industry = "Healthcare",
                             Location = "Boston, MA",
-                            UserId = 2,
                             WebsiteUrl = "https://healthplus.com"
                         });
                 });
@@ -137,14 +148,20 @@ namespace JobBoard.Migrations
                     b.Property<DateTime>("DateSubmitted")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("FeedBack");
 
@@ -152,16 +169,16 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 1,
-                            DateSubmitted = new DateTime(2025, 12, 21, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(1341),
-                            Message = "Great job board, very easy to use!",
-                            UserId = 3
+                            DateSubmitted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7352),
+                            IdentityUserId = "11111111-2222-3333-4444-555555555555",
+                            Message = "Great job board, very easy to use!"
                         },
                         new
                         {
                             Id = 2,
-                            DateSubmitted = new DateTime(2025, 12, 21, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(1344),
-                            Message = "I love how easy it is to post jobs.",
-                            UserId = 2
+                            DateSubmitted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7355),
+                            IdentityUserId = "22222222-3333-4444-5555-666666666666",
+                            Message = "I love how easy it is to post jobs."
                         });
                 });
 
@@ -208,13 +225,15 @@ namespace JobBoard.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployerId");
+
                     b.ToTable("JobListing");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            DatePosted = new DateTime(2025, 12, 21, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(1443),
+                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7442),
                             Description = "Develop and maintain web applications using modern frameworks.",
                             EmployerId = 1,
                             Industry = "Software",
@@ -227,7 +246,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 2,
-                            DatePosted = new DateTime(2025, 12, 21, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(1447),
+                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7445),
                             Description = "Work on APIs and server-side logic.",
                             EmployerId = 1,
                             Industry = "Software",
@@ -240,7 +259,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 3,
-                            DatePosted = new DateTime(2025, 12, 21, 18, 44, 29, 771, DateTimeKind.Local).AddTicks(1450),
+                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7447),
                             Description = "Analyze data to provide actionable insights.",
                             EmployerId = 2,
                             Industry = "Finance",
@@ -271,6 +290,10 @@ namespace JobBoard.Migrations
                     b.Property<string>("Experience")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LinkedInPath")
                         .HasColumnType("nvarchar(max)");
 
@@ -281,10 +304,12 @@ namespace JobBoard.Migrations
                     b.Property<string>("ResumePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("JobSeeker");
 
@@ -295,9 +320,9 @@ namespace JobBoard.Migrations
                             EducationLevel = "Bachelor's in Computer Science",
                             Email = "alice.johnson@example.com",
                             Experience = "2 years at TechCorp as Frontend Developer",
+                            IdentityUserId = "11111111-2222-3333-4444-555555555555",
                             LinkedInPath = "https://www.linkedin.com/in/alicejohnson",
-                            Name = "Alice Johnson",
-                            UserId = 1
+                            Name = "Alice Johnson"
                         },
                         new
                         {
@@ -305,64 +330,9 @@ namespace JobBoard.Migrations
                             EducationLevel = "Master's in Data Science",
                             Email = "bob.smith@example.com",
                             Experience = "3 years at DataSolutions as Data Analyst",
+                            IdentityUserId = "22222222-3333-4444-5555-666666666666",
                             LinkedInPath = "https://www.linkedin.com/in/bobsmith",
-                            Name = "Bob Smith",
-                            UserId = 2
-                        });
-                });
-
-            modelBuilder.Entity("JobBoard.Components.Domain.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccountType = "Admin",
-                            Email = "admin@example.com",
-                            Role = "Admin",
-                            UserName = "AdminUser"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccountType = "Standard",
-                            Email = "employer@example.com",
-                            Role = "Employer",
-                            UserName = "EmployerUser"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccountType = "Standard",
-                            Email = "jobseeker@example.com",
-                            Role = "JobSeeker",
-                            UserName = "JobSeekerUser"
+                            Name = "Bob Smith"
                         });
                 });
 
@@ -429,6 +399,88 @@ namespace JobBoard.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "11111111-2222-3333-4444-555555555555",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "01eb0fab-405f-423d-9265-c496575b4aa4",
+                            Email = "alice.johnson@example.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALICE.JOHNSON@EXAMPLE.COM",
+                            NormalizedUserName = "ALICE.JOHNSON@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPW+C30/2P/bvodQbn+pRlQE6SMAhDMW9BAi/wz8ebrcuviVKDMBGkdntyLSnWTM8A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7bca091b-5bad-4578-a5b1-0815842acf86",
+                            TwoFactorEnabled = false,
+                            UserName = "alice.johnson@example.com"
+                        },
+                        new
+                        {
+                            Id = "22222222-3333-4444-5555-666666666666",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "70630010-32b7-46d5-93e2-6caa0ebedbff",
+                            Email = "bob.smith@example.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "BOB.SMITH@EXAMPLE.COM",
+                            NormalizedUserName = "BOB.SMITH@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAoIs/20amZQ7yG/38fcWFBwGd6hJz8scKRxr5LRi6kuyKbYhm6/GZYTOmYOzLjwKA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "0003da3b-a501-429b-ac3f-2f5131a30095",
+                            TwoFactorEnabled = false,
+                            UserName = "bob.smith@example.com"
+                        },
+                        new
+                        {
+                            Id = "33333333-4444-5555-6666-777777777777",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "08c29c46-6a5f-49d2-945d-7c46cba032ab",
+                            Email = "employer1@techcorp.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYER1@TECHCORP.COM",
+                            NormalizedUserName = "EMPLOYER1@TECHCORP.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG5p4OqVvouGBfSQaoo7T/1+XZqVBB89orJoroHR3oPSgRyLZXVTmSYUtMzcpP+6CQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "feb5f5b0-a1d0-44d2-b3f0-88d272df2ec4",
+                            TwoFactorEnabled = false,
+                            UserName = "employer1@techcorp.com"
+                        },
+                        new
+                        {
+                            Id = "44444444-5555-6666-7777-888888888888",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "dafde967-809a-45cd-bfd7-dfd9fd5eb473",
+                            Email = "employer2@healthplus.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYER2@HEALTHPLUS.COM",
+                            NormalizedUserName = "EMPLOYER2@HEALTHPLUS.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOU34mK++zlzLZ//yfJH1B5DU0wBeNvHsGqimmuwMHkAefqgBOd5Al7xGlrKsuH0cw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dfe29f4b-0798-47ab-b3fb-5f0d8d0c1bed",
+                            TwoFactorEnabled = false,
+                            UserName = "employer2@healthplus.com"
+                        },
+                        new
+                        {
+                            Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8290669c-55f7-4448-8a21-a6104c6b7a55",
+                            Email = "admin@localhost.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@LOCALHOST.COM",
+                            NormalizedUserName = "ADMIN@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB8gFrEkqczq/n7aRR0jGbMZ1uh5Hmssx6NiMZW7UwkmdMlGB1gDhN5evzG+hBId4A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "12005112-7b9d-42de-b969-4d44c2dd73e8",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@localhost.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -456,6 +508,26 @@ namespace JobBoard.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "c3a1f2d4-9b8e-4a21-a1b2-01f0e5d6c789",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "d7e4c1b2-8a9f-4c33-b1a0-92e4f6d8c123",
+                            Name = "Employer",
+                            NormalizedName = "EMPLOYER"
+                        },
+                        new
+                        {
+                            Id = "e9b7a3d2-5f61-4c9b-8a11-0b3f8c4e5678",
+                            Name = "JobSeeker",
+                            NormalizedName = "JOBSEEKER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -543,6 +615,13 @@ namespace JobBoard.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                            RoleId = "c3a1f2d4-9b8e-4a21-a1b2-01f0e5d6c789"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -562,6 +641,63 @@ namespace JobBoard.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("JobBoard.Components.Domain.Application", b =>
+                {
+                    b.HasOne("JobBoard.Components.Domain.JobListing", "JobListing")
+                        .WithMany()
+                        .HasForeignKey("JobListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JobBoard.Data.JobBoardUser", "JobSeeker")
+                        .WithMany()
+                        .HasForeignKey("JobSeekerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobListing");
+
+                    b.Navigation("JobSeeker");
+                });
+
+            modelBuilder.Entity("JobBoard.Components.Domain.Employer", b =>
+                {
+                    b.HasOne("JobBoard.Data.JobBoardUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("JobBoard.Components.Domain.FeedBack", b =>
+                {
+                    b.HasOne("JobBoard.Data.JobBoardUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("JobBoard.Components.Domain.JobListing", b =>
+                {
+                    b.HasOne("JobBoard.Components.Domain.Employer", "Employer")
+                        .WithMany()
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+                });
+
+            modelBuilder.Entity("JobBoard.Components.Domain.JobSeeker", b =>
+                {
+                    b.HasOne("JobBoard.Data.JobBoardUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -17,7 +17,7 @@
 <QuickGrid Class="table" Items="context.FeedBack">
     <PropertyColumn Property="feedback => feedback.Message" />
     <PropertyColumn Property="feedback => feedback.DateSubmitted" />
-    <PropertyColumn Property="feedback => feedback.UserId" />
+    <PropertyColumn Property="feedback => feedback.IdentityUserId" />
 
     <TemplateColumn Context="feedback">
         <a href="@($"feedbacks/edit?id={feedback.Id}")">Edit</a> |

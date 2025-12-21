@@ -42,8 +42,8 @@
             <dd class="col-sm-10">@employer.WebsiteUrl</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@employer.UserId</dd>
+            <dt class="col-sm-2">IdentityUserId</dt>
+            <dd class="col-sm-10">@employer.IdentityUserId</dd>
         </dl>
         <EditForm method="post" Model="employer" OnValidSubmit="DeleteEmployer" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(employer is null)">Delete</button> |

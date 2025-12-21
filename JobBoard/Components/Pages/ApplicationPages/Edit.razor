@@ -39,7 +39,7 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="jobseekerid" class="form-label">JobSeekerId:</label>
-                    <InputNumber id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" />
+                    <InputText id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" />
                     <ValidationMessage For="() => Application.JobSeekerId" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>

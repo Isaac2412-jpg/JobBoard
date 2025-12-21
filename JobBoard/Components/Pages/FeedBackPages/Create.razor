@@ -26,9 +26,9 @@
                 <ValidationMessage For="() => FeedBack.DateSubmitted" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="userid" class="form-label">UserId:</label> 
-                <InputNumber id="userid" @bind-Value="FeedBack.UserId" class="form-control" /> 
-                <ValidationMessage For="() => FeedBack.UserId" class="text-danger" /> 
+                <label for="identityuserid" class="form-label">IdentityUserId:</label> 
+                <InputText id="identityuserid" @bind-Value="FeedBack.IdentityUserId" class="form-control" /> 
+                <ValidationMessage For="() => FeedBack.IdentityUserId" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
