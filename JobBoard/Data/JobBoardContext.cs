@@ -22,7 +22,10 @@ namespace JobBoard.Data
             builder.ApplyConfiguration(new FeedBackSeed());
             builder.ApplyConfiguration(new JobListingSeed());
             builder.ApplyConfiguration(new JobSeekerSeed());
+
+            builder.ApplyConfiguration(new RoleSeed());
             builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
 
         }
 

@@ -18,7 +18,7 @@ namespace JobBoard.Configurations.Entities
                     Industry = "Software",
                     Location = "New York, NY",
                     WebsiteUrl = "https://techcorp.com",
-                    UserId = 2
+                    IdentityUserId = "22222222-3333-4444-5555-666666666666"
                 },
 
                 new Employer
@@ -30,7 +30,7 @@ namespace JobBoard.Configurations.Entities
                     Industry = "Healthcare",
                     Location = "Boston, MA",
                     WebsiteUrl = "https://healthplus.com",
-                    UserId = 2
+                    IdentityUserId = "33333333-4444-5555-6666-777777777777"
                 }
             );
         }

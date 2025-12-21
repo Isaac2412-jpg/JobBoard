@@ -18,7 +18,7 @@ namespace JobBoard.Configurations.Entities
                     ResumePath = null, 
                     LinkedInPath = "https://www.linkedin.com/in/alicejohnson",
                     Experience = "2 years at TechCorp as Frontend Developer",
-                    UserId = 1
+                    IdentityUserId = "11111111-2222-3333-4444-555555555555" // Link to JobBoardUser
                 },
                 new JobSeeker
                 {
@@ -29,7 +29,7 @@ namespace JobBoard.Configurations.Entities
                     ResumePath = null,
                     LinkedInPath = "https://www.linkedin.com/in/bobsmith",
                     Experience = "3 years at DataSolutions as Data Analyst",
-                    UserId = 2
+                    IdentityUserId = "22222222-3333-4444-5555-666666666666" // Link to JobBoardUser
                 }
             );
         }

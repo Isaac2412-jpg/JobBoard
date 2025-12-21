@@ -14,7 +14,7 @@ namespace JobBoard.Configurations.Entities
                     Id = 1,
                     Message = "Great job board, very easy to use!",
                     DateSubmitted = DateTime.Now,
-                    UserId = 3
+                    IdentityUserId = "11111111-2222-3333-4444-555555555555" // JobSeeker 1
                 },
 
                 new FeedBack
@@ -22,7 +22,7 @@ namespace JobBoard.Configurations.Entities
                     Id = 2,
                     Message = "I love how easy it is to post jobs.",
                     DateSubmitted = DateTime.Now,
-                    UserId = 2
+                    IdentityUserId = "22222222-3333-4444-5555-666666666666" // Employer1
                 }
             );
         }
