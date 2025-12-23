@@ -38,6 +38,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<JobBoardUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<JobBoardContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

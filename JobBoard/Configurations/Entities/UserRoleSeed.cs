@@ -11,7 +11,7 @@ namespace JobBoard.Configurations.Entities
             builder.HasData(
                 new IdentityUserRole<string>
                 {
-                    UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
+                    UserId = "3781efa7-66dc-47f0-860f-e506d04102e4", //admin 
                     RoleId = "c3a1f2d4-9b8e-4a21-a1b2-01f0e5d6c789"
                 }
             );
