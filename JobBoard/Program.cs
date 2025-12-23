@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<JobBoardContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("JobBoardContext") ?? throw new InvalidOperationException("Connection string 'JobBoardContext' not found.")));
+
+builder.Services.AddDbContextFactory<JobBoardContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("JobBoardContext")!));
+       
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 

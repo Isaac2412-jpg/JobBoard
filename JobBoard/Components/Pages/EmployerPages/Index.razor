@@ -4,39 +4,55 @@
 @using JobBoard.Components.Domain
 @using JobBoard.Data
 @implements IAsyncDisposable
-@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@inject IDbContextFactory<JobBoardContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Employers</PageTitle>
 
-<h1>Index</h1>
+<h1>Employers</h1>
 
 <p>
-    <a href="employers/create">Create New</a>
+    <a href="/employers/create" class="btn btn-primary">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.Employer">
-    <PropertyColumn Property="employer => employer.CompanyName" />
-    <PropertyColumn Property="employer => employer.CompanyEmail" />
-    <PropertyColumn Property="employer => employer.CompanyLogoPath" />
-    <PropertyColumn Property="employer => employer.Industry" />
-    <PropertyColumn Property="employer => employer.Location" />
-    <PropertyColumn Property="employer => employer.WebsiteUrl" />
-    <PropertyColumn Property="employer => employer.IdentityUserId" />
+@if (Employers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <QuickGrid TItem="JobListing" Class ="table" Items="@(Employers as IQueryable<Employer>)">
+        <PropertyColumn Property="e => e.CompanyName" Title="Company Name" />
+        <PropertyColumn Property="e => e.CompanyEmail" Title="Company Email" />
+        <PropertyColumn Property="e => e.CompanyLogoPath" Title="Logo" />
+        <PropertyColumn Property="e => e.Industry" Title="Industry" />
+        <PropertyColumn Property="e => e.Location" Title="Location" />
+        <PropertyColumn Property="e => e.WebsiteUrl" Title="Website" />
+        <PropertyColumn Property="e => e.IdentityUserId" Title="User ID" />
 
-    <TemplateColumn Context="employer">
-        <a href="@($"employers/edit?id={employer.Id}")">Edit</a> |
-        <a href="@($"employers/details?id={employer.Id}")">Details</a> |
-        <a href="@($"employers/delete?id={employer.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="e" Title="Actions">
+            <a href="@($"/employers/edit?id={e.Id}")">Edit</a> |
+            <a href="@($"/employers/details?id={e.Id}")">Details</a> |
+            <a href="@($"/employers/delete?id={e.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
 
 @code {
-    private JobBoardContext context = default!;
+    private JobBoardContext? context;
+    private IQueryable<Employer>? Employers;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+        Employers = context.Employer; // Keep it IQueryable
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        if (context != null)
+        {
+            await context.DisposeAsync();
+        }
+    }
 }
+
