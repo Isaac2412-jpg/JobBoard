@@ -1,4 +1,4 @@
-﻿@page "/employers/edit"
+﻿@page "/employers/edit/{Id:int}"
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
@@ -69,8 +69,8 @@ else
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
     [SupplyParameterFromForm]
     private Employer? Employer { get; set; }
