@@ -10,9 +10,11 @@
 
 <h1>Employers</h1>
 
+<AuthorizeView Roles ="Employers">
 <p>
     <a href="/employers/create" class="btn btn-primary">Create New</a>
 </p>
+</AuthorizeView>
 
 @if (Employers == null)
 {
@@ -30,9 +32,13 @@ else
         <PropertyColumn Property="e => e.IdentityUserId" Title="User ID" />
 
         <TemplateColumn Context="e" Title="Actions">
+            <AuthorizeView Roles ="Admin, Employer">
             <a href="@($"/employers/edit?id={e.Id}")">Edit</a> |
+            </AuthorizeView>
             <a href="@($"/employers/details?id={e.Id}")">Details</a> |
+            <AuthorizeView Roles ="Admin, Employer">
             <a href="@($"/employers/delete?id={e.Id}")">Delete</a>
+            </AuthorizeView>
         </TemplateColumn>
     </QuickGrid>
 }

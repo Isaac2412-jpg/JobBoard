@@ -6,13 +6,16 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<JobBoardContext> DbFactory
 
+
 <PageTitle>Job Listings</PageTitle>
 
 <h1>Job Listings</h1>
 
+<AuthorizeView Roles ="Admin, Employer">
 <p>
     <a href="/joblistings/create" class="btn btn-primary">Create New</a>
 </p>
+</AuthorizeView>
 
 @if (JobListings == null)
 {
@@ -32,9 +35,13 @@ else
         <PropertyColumn Property="j => j.EmployerId" Title="Employer ID" />
 
         <TemplateColumn Context="j" Title="Actions">
+            <AuthorizeView Roles ="Admin, Employer">
             <a href="@($"/joblistings/edit?id={j.Id}")">Edit</a> |
+            </AuthorizeView>
             <a href="@($"/joblistings/details?id={j.Id}")">Details</a> |
+            <AuthorizeView Roles ="Admin, Employer">
             <a href="@($"/joblistings/delete?id={j.Id}")">Delete</a>
+            </AuthorizeView>
         </TemplateColumn>
     </QuickGrid>
 }

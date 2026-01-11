@@ -3,6 +3,7 @@
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin, Employer")]
 
 <PageTitle>Create</PageTitle>
 

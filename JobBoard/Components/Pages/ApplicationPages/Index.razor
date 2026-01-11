@@ -21,9 +21,13 @@
     <PropertyColumn Property="application => application.JobSeekerId" />
 
     <TemplateColumn Context="application">
+      
         <a href="@($"applications/edit?id={application.Id}")">Edit</a> |
+     
         <a href="@($"applications/details?id={application.Id}")">Details</a> |
+       
         <a href="@($"applications/delete?id={application.Id}")">Delete</a>
+        
     </TemplateColumn>
 </QuickGrid>
 
