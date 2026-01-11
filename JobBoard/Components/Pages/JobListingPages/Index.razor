@@ -35,14 +35,13 @@ else
         <PropertyColumn Property="j => j.EmployerId" Title="Employer ID" />
 
         <TemplateColumn Context="j" Title="Actions">
-            <AuthorizeView Roles ="Admin, Employer">
-            <a href="@($"/joblistings/edit?id={j.Id}")">Edit</a> |
-            </AuthorizeView>
-            <a href="@($"/joblistings/details?id={j.Id}")">Details</a> |
-            <AuthorizeView Roles ="Admin, Employer">
-            <a href="@($"/joblistings/delete?id={j.Id}")">Delete</a>
+            <a href="@($"/joblistings/details/{j.Id}")">Details</a> |
+            <AuthorizeView Roles="Admin, Employer">
+                <a href="@($"/joblistings/edit/{j.Id}")">Edit</a> |
+                <a href="@($"/joblistings/delete/{j.Id}")">Delete</a>
             </AuthorizeView>
         </TemplateColumn>
+
     </QuickGrid>
 }
 

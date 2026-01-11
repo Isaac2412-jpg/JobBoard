@@ -265,8 +265,7 @@ namespace JobBoard.Migrations
                     DateApplied = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JobListingId = table.Column<int>(type: "int", nullable: false),
-                    JobSeekerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ResumeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    JobSeekerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,11 +299,11 @@ namespace JobBoard.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "11111111-2222-3333-4444-555555555555", 0, "da36f31f-e769-4d4a-a249-8cc874bfff91", "alice.johnson@example.com", true, false, null, "ALICE.JOHNSON@EXAMPLE.COM", "ALICE.JOHNSON@EXAMPLE.COM", "AQAAAAIAAYagAAAAEHgmeSh9tZ6+JoyOOsDBu2QlrMVtC8PbLl3SkuykdqH+vwKDec5SEdg5982vD6EiCA==", null, false, "5526d046-02d1-408d-b984-972e775da521", false, "alice.johnson@example.com" },
-                    { "22222222-3333-4444-5555-666666666666", 0, "717ceb86-4c65-4d81-a4d9-724b2282cf4c", "bob.smith@example.com", true, false, null, "BOB.SMITH@EXAMPLE.COM", "BOB.SMITH@EXAMPLE.COM", "AQAAAAIAAYagAAAAEDCFeUqrq85w4GQsLfsJkT/Q7mBbwNNh033LRl5HpZDmKSGsRtOFJkcDwjS0B9IYLA==", null, false, "4bb39762-41a7-47a5-9d6d-626f5152ca99", false, "bob.smith@example.com" },
-                    { "33333333-4444-5555-6666-777777777777", 0, "6e288e59-f941-479e-ac43-0271f05f1ddb", "employer1@techcorp.com", true, false, null, "EMPLOYER1@TECHCORP.COM", "EMPLOYER1@TECHCORP.COM", "AQAAAAIAAYagAAAAEG1udS6Guh+HJWbV/gyuUTcbCoR9VpwQlG1+MZ4/rhZqgFupJ9mNT9iU2/bZp85GaA==", null, false, "53d8578e-0673-4906-a0f4-36ab009658c9", false, "employer1@techcorp.com" },
-                    { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "df93899f-a580-4acb-b3cd-5ef2358734a8", "admin@localhost.com", true, false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAEM/Ll9wkmo9Y/KGkUwFu8A9an8S4Y4E8BdEN862n3tU3/KjelbPJYXZMPx44HpWIRw==", null, false, "d4e34a51-17d0-4a45-aa10-4bab6ca298e5", false, "admin@localhost.com" },
-                    { "44444444-5555-6666-7777-888888888888", 0, "ee157ab1-921c-49ef-983c-68237dfd58fc", "employer2@healthplus.com", true, false, null, "EMPLOYER2@HEALTHPLUS.COM", "EMPLOYER2@HEALTHPLUS.COM", "AQAAAAIAAYagAAAAEEM7r2p3scme4WFKtW2VyYpcB672MRE5M0FhV+pi6Mh2Mis2JxAbLZ7hGZSRk7pSrw==", null, false, "6f57c7f0-d608-4219-8900-b79e8370f47c", false, "employer2@healthplus.com" }
+                    { "11111111-2222-3333-4444-555555555555", 0, "f05e4147-0d64-482f-b551-66dffd28d873", "alice.johnson@example.com", true, false, null, "ALICE.JOHNSON@EXAMPLE.COM", "ALICE.JOHNSON@EXAMPLE.COM", "AQAAAAIAAYagAAAAECwHqKd7l73xDDSQvtTvu9WVyIRlbumPyk/Rsy6wZEm4dUUv4Qjn79pM6yLG+7zQ3w==", null, false, "9bc68eec-e7d2-4543-a8d1-4b4113ad6dcf", false, "alice.johnson@example.com" },
+                    { "22222222-3333-4444-5555-666666666666", 0, "d582706b-3b0e-4e61-a8fe-8886f9155952", "bob.smith@example.com", true, false, null, "BOB.SMITH@EXAMPLE.COM", "BOB.SMITH@EXAMPLE.COM", "AQAAAAIAAYagAAAAEHMz9VhP9xMYi7lTnUMvfgYNtDOjSCPy5aBMbq7qlYDg6EKmppP2GeF07nxM61AdHQ==", null, false, "3ecd67b3-d840-4a00-b075-d131ed27fc11", false, "bob.smith@example.com" },
+                    { "33333333-4444-5555-6666-777777777777", 0, "30ed7692-9934-4834-af67-f3a4c34264ac", "employer1@techcorp.com", true, false, null, "EMPLOYER1@TECHCORP.COM", "EMPLOYER1@TECHCORP.COM", "AQAAAAIAAYagAAAAEIaogBHZcuquvPyEs2hWk+PvPlvJxkSFReFcrEc1oj4X6/WKOP4ypVqe4Y3BGkoXmA==", null, false, "28416ca1-1b76-45a7-9b68-7603233b2145", false, "employer1@techcorp.com" },
+                    { "3781efa7-66dc-47f0-860f-e506d04102e4", 0, "d2b77943-1669-4331-a4d2-1d4825730450", "admin@localhost.com", true, false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAIAAYagAAAAECnKGMw8Ri8EsxaJbCdp9N2uy01czg7a3zeixdz1fsx46ZVqZR92jWiEWDtJwf0dXQ==", null, false, "142c9f8e-d544-4dff-9790-a3862c1506e1", false, "admin@localhost.com" },
+                    { "44444444-5555-6666-7777-888888888888", 0, "e5ece6dd-f202-49fe-9b4a-fa959c6f183e", "employer2@healthplus.com", true, false, null, "EMPLOYER2@HEALTHPLUS.COM", "EMPLOYER2@HEALTHPLUS.COM", "AQAAAAIAAYagAAAAEF+auH3lArBW+smhOAxbY5zLY+X7OzPWhlAF204ZvebPq3RmPChmQZ9NiCYl8hOyXA==", null, false, "98230cd3-9234-4fdc-bb36-e0408dd2ee29", false, "employer2@healthplus.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -321,8 +320,8 @@ namespace JobBoard.Migrations
                 columns: new[] { "Id", "DateSubmitted", "IdentityUserId", "Message", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 11, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(1080), "11111111-2222-3333-4444-555555555555", "Great job board, very easy to use!", null },
-                    { 2, new DateTime(2026, 1, 11, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(1082), "22222222-3333-4444-5555-666666666666", "I love how easy it is to post jobs.", null }
+                    { 1, new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5685), "11111111-2222-3333-4444-555555555555", "Great job board, very easy to use!", null },
+                    { 2, new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5692), "22222222-3333-4444-5555-666666666666", "I love how easy it is to post jobs.", null }
                 });
 
             migrationBuilder.InsertData(
@@ -337,32 +336,25 @@ namespace JobBoard.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[,]
-                {
-                    { "e9b7a3d2-5f61-4c9b-8a11-0b3f8c4e5678", "11111111-2222-3333-4444-555555555555" },
-                    { "e9b7a3d2-5f61-4c9b-8a11-0b3f8c4e5678", "22222222-3333-4444-5555-666666666666" },
-                    { "d7e4c1b2-8a9f-4c33-b1a0-92e4f6d8c123", "33333333-4444-5555-6666-777777777777" },
-                    { "c3a1f2d4-9b8e-4a21-a1b2-01f0e5d6c789", "3781efa7-66dc-47f0-860f-e506d04102e4" },
-                    { "d7e4c1b2-8a9f-4c33-b1a0-92e4f6d8c123", "44444444-5555-6666-7777-888888888888" }
-                });
+                values: new object[] { "c3a1f2d4-9b8e-4a21-a1b2-01f0e5d6c789", "3781efa7-66dc-47f0-860f-e506d04102e4" });
 
             migrationBuilder.InsertData(
                 table: "JobListing",
                 columns: new[] { "Id", "DatePosted", "Description", "EmployerId", "Industry", "JobType", "Location", "Requirements", "Salary", "Title" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 11, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(1170), "Develop and maintain web applications using modern frameworks.", 1, "Software", "Full-time", "New York, NY", "Proficient in C#, ASP.NET, and React.", 80000, "Frontend Developer" },
-                    { 2, new DateTime(2026, 1, 11, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(1173), "Work on APIs and server-side logic.", 1, "Software", "Full-time", "San Francisco, CA", "Experience with C#, .NET Core, SQL Server.", 85000, "Backend Developer" },
-                    { 3, new DateTime(2026, 1, 11, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(1175), "Analyze data to provide actionable insights.", 2, "Finance", "Part-time", "Chicago, IL", "SQL, Excel, and Power BI experience.", 60000, "Data Analyst" }
+                    { 1, new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6119), "Develop and maintain web applications using modern frameworks.", 1, "Software", "Full-time", "New York, NY", "Proficient in C#, ASP.NET, and React.", 80000, "Frontend Developer" },
+                    { 2, new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6125), "Work on APIs and server-side logic.", 1, "Software", "Full-time", "San Francisco, CA", "Experience with C#, .NET Core, SQL Server.", 85000, "Backend Developer" },
+                    { 3, new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6128), "Analyze data to provide actionable insights.", 2, "Finance", "Part-time", "Chicago, IL", "SQL, Excel, and Power BI experience.", 60000, "Data Analyst" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Application",
-                columns: new[] { "Id", "DateApplied", "JobListingId", "JobSeekerId", "ResumeUrl", "Status" },
+                columns: new[] { "Id", "DateApplied", "JobListingId", "JobSeekerId", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2026, 1, 6, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(662), 1, "11111111-2222-3333-4444-555555555555", "https://example.com/resumes/alice_johnson.pdf", "Pending" },
-                    { 2, new DateTime(2026, 1, 9, 17, 13, 46, 982, DateTimeKind.Local).AddTicks(682), 2, "22222222-3333-4444-5555-666666666666", "https://example.com/resumes/bob_smith.pdf", "Reviewed" }
+                    { 1, new DateTime(2026, 1, 6, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5034), 1, "11111111-2222-3333-4444-555555555555", "Pending" },
+                    { 2, new DateTime(2026, 1, 9, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5080), 2, "22222222-3333-4444-5555-666666666666", "Reviewed" }
                 });
 
             migrationBuilder.CreateIndex(

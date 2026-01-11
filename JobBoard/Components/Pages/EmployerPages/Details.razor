@@ -1,10 +1,10 @@
-﻿@page "/employers/details"
+﻿@page "/employers/details/{Id:int}"
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Employer Details</PageTitle>
 
 <h1>Details</h1>
 
@@ -15,26 +15,34 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
         <dl class="row">
             <dt class="col-sm-2">CompanyName</dt>
             <dd class="col-sm-10">@employer.CompanyName</dd>
+
             <dt class="col-sm-2">CompanyEmail</dt>
             <dd class="col-sm-10">@employer.CompanyEmail</dd>
+
             <dt class="col-sm-2">CompanyLogoPath</dt>
             <dd class="col-sm-10">@employer.CompanyLogoPath</dd>
+
             <dt class="col-sm-2">Industry</dt>
             <dd class="col-sm-10">@employer.Industry</dd>
+
             <dt class="col-sm-2">Location</dt>
             <dd class="col-sm-10">@employer.Location</dd>
+
             <dt class="col-sm-2">WebsiteUrl</dt>
             <dd class="col-sm-10">@employer.WebsiteUrl</dd>
+
             <dt class="col-sm-2">IdentityUserId</dt>
             <dd class="col-sm-10">@employer.IdentityUserId</dd>
         </dl>
+
         <div>
-            <a href="@($"/employers/edit?id={employer.Id}")">Edit</a> |
-            <a href="@($"/employers")">Back to List</a>
+            <a href="@($"/employers/edit/{employer.Id}")">Edit</a> |
+            <a href="/employers">Back to List</a>
         </div>
     }
 </div>
@@ -42,8 +50,8 @@
 @code {
     private Employer? employer;
 
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,7 +60,8 @@
 
         if (employer is null)
         {
-            NavigationManager.NavigateTo("notfound");
+            NavigationManager.NavigateTo("/notfound");
         }
     }
 }
+

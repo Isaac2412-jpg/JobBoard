@@ -55,7 +55,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 1,
-                            DateApplied = new DateTime(2025, 12, 16, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7021),
+                            DateApplied = new DateTime(2026, 1, 6, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5034),
                             JobListingId = 1,
                             JobSeekerId = "11111111-2222-3333-4444-555555555555",
                             Status = "Pending"
@@ -63,7 +63,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 2,
-                            DateApplied = new DateTime(2025, 12, 19, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7042),
+                            DateApplied = new DateTime(2026, 1, 9, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5080),
                             JobListingId = 2,
                             JobSeekerId = "22222222-3333-4444-5555-666666666666",
                             Status = "Reviewed"
@@ -169,14 +169,14 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 1,
-                            DateSubmitted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7352),
+                            DateSubmitted = new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5685),
                             IdentityUserId = "11111111-2222-3333-4444-555555555555",
                             Message = "Great job board, very easy to use!"
                         },
                         new
                         {
                             Id = 2,
-                            DateSubmitted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7355),
+                            DateSubmitted = new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(5692),
                             IdentityUserId = "22222222-3333-4444-5555-666666666666",
                             Message = "I love how easy it is to post jobs."
                         });
@@ -233,7 +233,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 1,
-                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7442),
+                            DatePosted = new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6119),
                             Description = "Develop and maintain web applications using modern frameworks.",
                             EmployerId = 1,
                             Industry = "Software",
@@ -246,7 +246,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 2,
-                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7445),
+                            DatePosted = new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6125),
                             Description = "Work on APIs and server-side logic.",
                             EmployerId = 1,
                             Industry = "Software",
@@ -259,7 +259,7 @@ namespace JobBoard.Migrations
                         new
                         {
                             Id = 3,
-                            DatePosted = new DateTime(2025, 12, 21, 20, 12, 34, 624, DateTimeKind.Local).AddTicks(7447),
+                            DatePosted = new DateTime(2026, 1, 11, 22, 19, 32, 615, DateTimeKind.Local).AddTicks(6128),
                             Description = "Analyze data to provide actionable insights.",
                             EmployerId = 2,
                             Industry = "Finance",
@@ -405,15 +405,15 @@ namespace JobBoard.Migrations
                         {
                             Id = "11111111-2222-3333-4444-555555555555",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "01eb0fab-405f-423d-9265-c496575b4aa4",
+                            ConcurrencyStamp = "f05e4147-0d64-482f-b551-66dffd28d873",
                             Email = "alice.johnson@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ALICE.JOHNSON@EXAMPLE.COM",
                             NormalizedUserName = "ALICE.JOHNSON@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPW+C30/2P/bvodQbn+pRlQE6SMAhDMW9BAi/wz8ebrcuviVKDMBGkdntyLSnWTM8A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECwHqKd7l73xDDSQvtTvu9WVyIRlbumPyk/Rsy6wZEm4dUUv4Qjn79pM6yLG+7zQ3w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7bca091b-5bad-4578-a5b1-0815842acf86",
+                            SecurityStamp = "9bc68eec-e7d2-4543-a8d1-4b4113ad6dcf",
                             TwoFactorEnabled = false,
                             UserName = "alice.johnson@example.com"
                         },
@@ -421,15 +421,15 @@ namespace JobBoard.Migrations
                         {
                             Id = "22222222-3333-4444-5555-666666666666",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "70630010-32b7-46d5-93e2-6caa0ebedbff",
+                            ConcurrencyStamp = "d582706b-3b0e-4e61-a8fe-8886f9155952",
                             Email = "bob.smith@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "BOB.SMITH@EXAMPLE.COM",
                             NormalizedUserName = "BOB.SMITH@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAoIs/20amZQ7yG/38fcWFBwGd6hJz8scKRxr5LRi6kuyKbYhm6/GZYTOmYOzLjwKA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHMz9VhP9xMYi7lTnUMvfgYNtDOjSCPy5aBMbq7qlYDg6EKmppP2GeF07nxM61AdHQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0003da3b-a501-429b-ac3f-2f5131a30095",
+                            SecurityStamp = "3ecd67b3-d840-4a00-b075-d131ed27fc11",
                             TwoFactorEnabled = false,
                             UserName = "bob.smith@example.com"
                         },
@@ -437,15 +437,15 @@ namespace JobBoard.Migrations
                         {
                             Id = "33333333-4444-5555-6666-777777777777",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "08c29c46-6a5f-49d2-945d-7c46cba032ab",
+                            ConcurrencyStamp = "30ed7692-9934-4834-af67-f3a4c34264ac",
                             Email = "employer1@techcorp.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER1@TECHCORP.COM",
                             NormalizedUserName = "EMPLOYER1@TECHCORP.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG5p4OqVvouGBfSQaoo7T/1+XZqVBB89orJoroHR3oPSgRyLZXVTmSYUtMzcpP+6CQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIaogBHZcuquvPyEs2hWk+PvPlvJxkSFReFcrEc1oj4X6/WKOP4ypVqe4Y3BGkoXmA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "feb5f5b0-a1d0-44d2-b3f0-88d272df2ec4",
+                            SecurityStamp = "28416ca1-1b76-45a7-9b68-7603233b2145",
                             TwoFactorEnabled = false,
                             UserName = "employer1@techcorp.com"
                         },
@@ -453,15 +453,15 @@ namespace JobBoard.Migrations
                         {
                             Id = "44444444-5555-6666-7777-888888888888",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dafde967-809a-45cd-bfd7-dfd9fd5eb473",
+                            ConcurrencyStamp = "e5ece6dd-f202-49fe-9b4a-fa959c6f183e",
                             Email = "employer2@healthplus.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EMPLOYER2@HEALTHPLUS.COM",
                             NormalizedUserName = "EMPLOYER2@HEALTHPLUS.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOU34mK++zlzLZ//yfJH1B5DU0wBeNvHsGqimmuwMHkAefqgBOd5Al7xGlrKsuH0cw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEF+auH3lArBW+smhOAxbY5zLY+X7OzPWhlAF204ZvebPq3RmPChmQZ9NiCYl8hOyXA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "dfe29f4b-0798-47ab-b3fb-5f0d8d0c1bed",
+                            SecurityStamp = "98230cd3-9234-4fdc-bb36-e0408dd2ee29",
                             TwoFactorEnabled = false,
                             UserName = "employer2@healthplus.com"
                         },
@@ -469,15 +469,15 @@ namespace JobBoard.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8290669c-55f7-4448-8a21-a6104c6b7a55",
+                            ConcurrencyStamp = "d2b77943-1669-4331-a4d2-1d4825730450",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB8gFrEkqczq/n7aRR0jGbMZ1uh5Hmssx6NiMZW7UwkmdMlGB1gDhN5evzG+hBId4A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECnKGMw8Ri8EsxaJbCdp9N2uy01czg7a3zeixdz1fsx46ZVqZR92jWiEWDtJwf0dXQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "12005112-7b9d-42de-b969-4d44c2dd73e8",
+                            SecurityStamp = "142c9f8e-d544-4dff-9790-a3862c1506e1",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });

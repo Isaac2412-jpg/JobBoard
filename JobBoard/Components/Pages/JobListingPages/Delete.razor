@@ -1,4 +1,4 @@
-﻿@page "/joblistings/delete"
+﻿@page "/joblistings/delete/{Id:int}"
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
@@ -63,8 +63,8 @@
 @code {
     private JobListing? joblisting;
 
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
