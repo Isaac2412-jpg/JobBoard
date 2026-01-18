@@ -1,54 +1,56 @@
 ﻿@page "/feedbacks/create"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Feedback</PageTitle>
 
-<h1>Create</h1>
-
-<h2>FeedBack</h2>
+<h1>Create Feedback</h1>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="FeedBack" OnValidSubmit="AddFeedBack" FormName="create" Enhance>
+    <div class="col-md-6">
+        <EditForm Model="@FeedBack" OnValidSubmit="AddFeedBack">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" role="alert" />
+
             <div class="mb-3">
-                <label for="message" class="form-label">Message:</label> 
-                <InputText id="message" @bind-Value="FeedBack.Message" class="form-control" /> 
-                <ValidationMessage For="() => FeedBack.Message" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="datesubmitted" class="form-label">DateSubmitted:</label> 
-                <InputDate id="datesubmitted" @bind-Value="FeedBack.DateSubmitted" class="form-control" /> 
-                <ValidationMessage For="() => FeedBack.DateSubmitted" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="identityuserid" class="form-label">IdentityUserId:</label> 
-                <InputText id="identityuserid" @bind-Value="FeedBack.IdentityUserId" class="form-control" /> 
-                <ValidationMessage For="() => FeedBack.IdentityUserId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label class="form-label">Message</label>
+                <InputTextArea class="form-control" @bind-Value="FeedBack.Message" />
+                <ValidationMessage For="() => FeedBack.Message" class="text-danger" />
+            </div>
+
+            <p class="text-muted">
+                Date will be set automatically when you submit.
+            </p>
+
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+            <a class="btn btn-secondary ms-2" href="/feedbacks">Back</a>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/feedbacks">Back to List</a>
-</div>
-
 @code {
-    [SupplyParameterFromForm]
     private FeedBack FeedBack { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddFeedBack()
     {
         using var context = DbFactory.CreateDbContext();
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        FeedBack.DateSubmitted = DateTime.Now;
+        FeedBack.IdentityUserId = userId!;
+
         context.FeedBack.Add(FeedBack);
         await context.SaveChangesAsync();
+
         NavigationManager.NavigateTo("/feedbacks");
     }
 }

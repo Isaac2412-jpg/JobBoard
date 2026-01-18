@@ -1,61 +1,96 @@
-﻿@page "/applications/create"
+﻿@page "/applications/create/{JobListingId:int}"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
+@using System.Security.Claims
 @using JobBoard.Components.Domain
-@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+@using JobBoard.Data
+@implements IAsyncDisposable
+
+@inject IDbContextFactory<JobBoardContext> DbFactory
+@inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
 
-
-
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Application</PageTitle>
 
 <h1>Create</h1>
-
 <h2>Application</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Application" OnValidSubmit="AddApplication" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="dateapplied" class="form-label">DateApplied:</label> 
-                <InputDate id="dateapplied" @bind-Value="Application.DateApplied" class="form-control" /> 
-                <ValidationMessage For="() => Application.DateApplied" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label> 
-                <InputText id="status" @bind-Value="Application.Status" class="form-control" /> 
-                <ValidationMessage For="() => Application.Status" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="joblistingid" class="form-label">JobListingId:</label> 
-                <InputNumber id="joblistingid" @bind-Value="Application.JobListingId" class="form-control" /> 
-                <ValidationMessage For="() => Application.JobListingId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="jobseekerid" class="form-label">JobSeekerId:</label> 
-                <InputText id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" /> 
-                <ValidationMessage For="() => Application.JobSeekerId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
-</div>
 
-<div>
-    <a href="/applications">Back to List</a>
-</div>
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>Status will be set to <b>Pending</b> automatically.</p>
+
+    <button class="btn btn-primary" @onclick="AddApplication">Apply</button>
+
+    <p class="mt-3">
+        <a href="/joblistings">Back to List</a>
+    </p>
+}
 
 @code {
-    [SupplyParameterFromForm]
-    private Application Application { get; set; } = new();
+    [Parameter] public int JobListingId { get; set; }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private JobBoardContext? context;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = await DbFactory.CreateDbContextAsync();
+        _loading = false;
+    }
+
     private async Task AddApplication()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Application.Add(Application);
+        if (context == null) return;
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        // must have a JobSeeker profile first
+        var jobSeekerProfile = await context.JobSeeker.FirstOrDefaultAsync(j => j.IdentityUserId == userId);
+        if (jobSeekerProfile == null)
+        {
+            NavigationManager.NavigateTo("/jobseekers/create");
+            return;
+        }
+
+        // prevent duplicate apply (same Identity user applying same job)
+        var alreadyApplied = await context.Application
+            .AnyAsync(a => a.JobListingId == JobListingId && a.JobSeekerId == userId);
+
+        if (alreadyApplied)
+        {
+            NavigationManager.NavigateTo("/applications");
+            return;
+        }
+
+        var application = new Application
+        {
+            JobListingId = JobListingId,
+            JobSeekerId = userId,          // IMPORTANT: store Identity GUID
+            DateApplied = DateTime.Now,
+            Status = "Pending"
+        };
+
+        context.Application.Add(application);
         await context.SaveChangesAsync();
+
         NavigationManager.NavigateTo("/applications");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (context != null)
+            await context.DisposeAsync();
     }
 }

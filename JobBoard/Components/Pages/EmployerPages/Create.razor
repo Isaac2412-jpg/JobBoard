@@ -1,6 +1,10 @@
 ﻿@page "/employers/create"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Admin, Employer")]
@@ -45,12 +49,7 @@
                 <label for="websiteurl" class="form-label">WebsiteUrl:</label> 
                 <InputText id="websiteurl" @bind-Value="Employer.WebsiteUrl" class="form-control" /> 
                 <ValidationMessage For="() => Employer.WebsiteUrl" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="identityuserid" class="form-label">IdentityUserId:</label> 
-                <InputText id="identityuserid" @bind-Value="Employer.IdentityUserId" class="form-control" /> 
-                <ValidationMessage For="() => Employer.IdentityUserId" class="text-danger" /> 
-            </div>        
+            </div>                
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -68,7 +67,21 @@
     private async Task AddEmployer()
     {
         using var context = DbFactory.CreateDbContext();
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // Optional: prevent duplicate employer profile for same account
+        var existing = await context.Employer.FirstOrDefaultAsync(e => e.IdentityUserId == userId);
+        if (existing != null)
+        {
+            NavigationManager.NavigateTo($"/employers/details/{existing.Id}");
+            return;
+        }
+
+        Employer.IdentityUserId = userId!;
         context.Employer.Add(Employer);
+
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/employers");
     }

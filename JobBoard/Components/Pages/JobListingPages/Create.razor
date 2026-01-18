@@ -1,6 +1,10 @@
 ﻿@page "/joblistings/create"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Admin, Employer")]
@@ -50,17 +54,7 @@
                 <label for="requirements" class="form-label">Requirements:</label> 
                 <InputText id="requirements" @bind-Value="JobListing.Requirements" class="form-control" /> 
                 <ValidationMessage For="() => JobListing.Requirements" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dateposted" class="form-label">DatePosted:</label> 
-                <InputDate id="dateposted" @bind-Value="JobListing.DatePosted" class="form-control" /> 
-                <ValidationMessage For="() => JobListing.DatePosted" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="employerid" class="form-label">EmployerId:</label> 
-                <InputNumber id="employerid" @bind-Value="JobListing.EmployerId" class="form-control" /> 
-                <ValidationMessage For="() => JobListing.EmployerId" class="text-danger" /> 
-            </div>        
+            </div>         
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -78,6 +72,24 @@
     private async Task AddJobListing()
     {
         using var context = DbFactory.CreateDbContext();
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // Find employer profile linked to logged-in employer account
+        var employer = await context.Employer
+            .FirstOrDefaultAsync(e => e.IdentityUserId == userId);
+
+        if (employer == null)
+        {
+            // Employer must create profile first
+            NavigationManager.NavigateTo("/employers/create");
+            return;
+        }
+
+        JobListing.DatePosted = DateTime.Now;
+        JobListing.EmployerId = employer.Id;
+
         context.JobListing.Add(JobListing);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/joblistings");

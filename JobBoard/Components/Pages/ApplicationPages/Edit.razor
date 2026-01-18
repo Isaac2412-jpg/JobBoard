@@ -1,105 +1,92 @@
-﻿@page "/applications/edit"
+﻿@page "/applications/edit/{Id:int}"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
-@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
-@inject NavigationManager NavigationManager
+@using JobBoard.Data
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize(Roles = "Employer,Admin")]
 
+@inject IDbContextFactory<JobBoardContext> DbFactory
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Edit Application</PageTitle>
 
 <h1>Edit</h1>
-
 <h2>Application</h2>
 <hr />
-@if (Application is null)
+
+@if (_loading)
 {
     <p><em>Loading...</em></p>
 }
+else if (Application == null)
+{
+    <div class="alert alert-danger">Application not found.</div>
+}
 else
 {
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Application" OnValidSubmit="UpdateApplication" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="Application.Id" value="@Application.Id" />
-                <div class="mb-3">
-                    <label for="dateapplied" class="form-label">DateApplied:</label>
-                    <InputDate id="dateapplied" @bind-Value="Application.DateApplied" class="form-control" />
-                    <ValidationMessage For="() => Application.DateApplied" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <InputText id="status" @bind-Value="Application.Status" class="form-control" />
-                    <ValidationMessage For="() => Application.Status" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="joblistingid" class="form-label">JobListingId:</label>
-                    <InputNumber id="joblistingid" @bind-Value="Application.JobListingId" class="form-control" />
-                    <ValidationMessage For="() => Application.JobListingId" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="jobseekerid" class="form-label">JobSeekerId:</label>
-                    <InputText id="jobseekerid" @bind-Value="Application.JobSeekerId" class="form-control" />
-                    <ValidationMessage For="() => Application.JobSeekerId" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
+    <EditForm Model="Application" OnValidSubmit="UpdateApplication">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Job Listing ID</label>
+            <InputNumber class="form-control" @bind-Value="Application.JobListingId" disabled />
         </div>
-    </div>
+
+        <div class="mb-3">
+            <label class="form-label">Job Seeker (Identity GUID)</label>
+            <InputText class="form-control" @bind-Value="Application.JobSeekerId" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Date Applied</label>
+            <InputDate class="form-control" @bind-Value="Application.DateApplied" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <InputSelect class="form-control" @bind-Value="Application.Status">
+                <option value="Pending">Pending</option>
+                <option value="Reviewed">Reviewed</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+            </InputSelect>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-secondary ms-2" href="/applications">Back</a>
+    </EditForm>
 }
 
-<div>
-    <a href="/applications">Back to List</a>
-</div>
 
 @code {
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
+    [Parameter] public int Id { get; set; }
 
-    [SupplyParameterFromForm]
-    private Application? Application { get; set; }
+    private JobBoardContext? _context;
+    private bool _loading = true;
+    private Application? Application;
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        Application ??= await context.Application.FirstOrDefaultAsync(m => m.Id == Id);
+        _context = await DbFactory.CreateDbContextAsync();
 
-        if (Application is null)
-        {
-            NavigationManager.NavigateTo("notfound");
-        }
+        Application = await _context.Application
+            .Include(a => a.JobListing)
+            .FirstOrDefaultAsync(a => a.Id == Id);
+
+        _loading = false;
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task UpdateApplication()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(Application!).State = EntityState.Modified;
+        if (_context == null || Application == null) return;
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ApplicationExists(Application!.Id))
-            {
-                NavigationManager.NavigateTo("notfound");
-            }
-            else
-            {
-                throw;
-            }
-        }
+        _context.Application.Update(Application);
+        await _context.SaveChangesAsync();
 
-        NavigationManager.NavigateTo("/applications");
-    }
-
-    private bool ApplicationExists(int id)
-    {
-        using var context = DbFactory.CreateDbContext();
-        return context.Application.Any(e => e.Id == id);
+        Nav.NavigateTo("/applications");
     }
 }

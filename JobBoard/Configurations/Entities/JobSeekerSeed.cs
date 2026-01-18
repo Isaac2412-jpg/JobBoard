@@ -15,7 +15,6 @@ namespace JobBoard.Configurations.Entities
                     Name = "Alice Johnson",
                     Email = "alice.johnson@example.com",
                     EducationLevel = "Bachelor's in Computer Science",
-                    ResumePath = null, 
                     LinkedInPath = "https://www.linkedin.com/in/alicejohnson",
                     Experience = "2 years at TechCorp as Frontend Developer",
                     IdentityUserId = "11111111-2222-3333-4444-555555555555" // Link to JobBoardUser
@@ -26,7 +25,6 @@ namespace JobBoard.Configurations.Entities
                     Name = "Bob Smith",
                     Email = "bob.smith@example.com",
                     EducationLevel = "Master's in Data Science",
-                    ResumePath = null,
                     LinkedInPath = "https://www.linkedin.com/in/bobsmith",
                     Experience = "3 years at DataSolutions as Data Analyst",
                     IdentityUserId = "22222222-3333-4444-5555-666666666666" // Link to JobBoardUser

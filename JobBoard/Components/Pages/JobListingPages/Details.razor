@@ -1,4 +1,5 @@
 ﻿@page "/joblistings/details/{Id:int}"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
@@ -50,6 +51,11 @@
             </dd>
         </dl>
 
+        <AuthorizeView Roles="JobSeeker">
+            <a class="btn btn-success" href="@($"/applications/create/{Id}")">Apply</a>
+        </AuthorizeView>
+
+
         <div>
             <a href="@($"/joblistings/edit/{joblisting.Id}")">Edit</a> |
             <a href="/joblistings">Back to List</a>
@@ -62,6 +68,11 @@
 
     [Parameter]
     public int Id { get; set; }
+
+    private void ApplyNow()
+    {
+        NavigationManager.NavigateTo($"/applications/create/{Id}");
+    }
 
     protected override async Task OnInitializedAsync()
     {

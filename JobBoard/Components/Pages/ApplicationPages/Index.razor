@@ -1,43 +1,87 @@
 ﻿@page "/applications"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Security.Claims
 @using JobBoard.Components.Domain
 @using JobBoard.Data
-@implements IAsyncDisposable
-@inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
+
+@inject IDbContextFactory<JobBoardContext> DbFactory
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Applications</PageTitle>
 
 <h1>Applications</h1>
 
-<p>
-    <a href="applications/create">Create New</a>
-</p>
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (Applications == null || Applications.Count == 0)
+{
+    <p>No applications found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Job</th>
+                <th>Date Applied</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Applications)
+            {
+                <tr>
+                    <td>@(a.JobListing?.Title ?? "(No job title)")</td>
+                    <td>@a.DateApplied</td>
+                    <td>@a.Status</td>
+                    <td>
+                        <AuthorizeView Roles="Employer,Admin">
+                            <a href="@($"/applications/edit/{a.Id}")">Edit</a>
+                        </AuthorizeView>
+                    </td>
 
-<QuickGrid Class="table" Items="context.Application">
-    <PropertyColumn Property="application => application.DateApplied" />
-    <PropertyColumn Property="application => application.Status" />
-    <PropertyColumn Property="application => application.JobListingId" />
-    <PropertyColumn Property="application => application.JobSeekerId" />
-
-    <TemplateColumn Context="application">
-      
-        <a href="@($"applications/edit?id={application.Id}")">Edit</a> |
-     
-        <a href="@($"applications/details?id={application.Id}")">Details</a> |
-       
-        <a href="@($"applications/delete?id={application.Id}")">Delete</a>
-        
-    </TemplateColumn>
-</QuickGrid>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private JobBoardContext context = default!;
+    private JobBoardContext? _context;
+    private bool _loading = true;
+    private List<Application>? Applications;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
-    }
+        _context = await DbFactory.CreateDbContextAsync();
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var query = _context.Application
+            .Include(a => a.JobListing)
+            .AsQueryable();
+
+        if (authState.User.IsInRole("Employer") || authState.User.IsInRole("Admin"))
+        {
+            var employer = await _context.Employer.FirstOrDefaultAsync(e => e.IdentityUserId == userId);
+
+            if (employer != null)
+                query = query.Where(a => a.JobListing.EmployerId == employer.Id);
+            else
+                query = query.Where(a => false);
+        }
+        else
+        {
+            // JobSeeker: compare to Identity GUID string
+            query = query.Where(a => a.JobSeekerId == userId);
+        }
+
+        Applications = await query.ToListAsync();
+        _loading = false;
+    }
 }

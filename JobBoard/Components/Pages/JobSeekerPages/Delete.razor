@@ -1,4 +1,4 @@
-﻿@page "/jobseekers/delete"
+﻿@page "/jobseekers/delete/{id:int}"
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @inject IDbContextFactory<JobBoard.Data.JobBoardContext> DbFactory
@@ -28,10 +28,6 @@
         <dl class="row">
             <dt class="col-sm-2">EducationLevel</dt>
             <dd class="col-sm-10">@jobseeker.EducationLevel</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ResumePath</dt>
-            <dd class="col-sm-10">@jobseeker.ResumePath</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">LinkedInPath</dt>

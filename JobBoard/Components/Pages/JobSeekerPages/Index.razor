@@ -18,16 +18,16 @@
     <PropertyColumn Property="jobseeker => jobseeker.Name" />
     <PropertyColumn Property="jobseeker => jobseeker.Email" />
     <PropertyColumn Property="jobseeker => jobseeker.EducationLevel" />
-    <PropertyColumn Property="jobseeker => jobseeker.ResumePath" />
     <PropertyColumn Property="jobseeker => jobseeker.LinkedInPath" />
     <PropertyColumn Property="jobseeker => jobseeker.Experience" />
     <PropertyColumn Property="jobseeker => jobseeker.IdentityUserId" />
 
     <TemplateColumn Context="jobseeker">
-        <a href="@($"jobseekers/edit?id={jobseeker.Id}")">Edit</a> |
-        <a href="@($"jobseekers/details?id={jobseeker.Id}")">Details</a> |
-        <a href="@($"jobseekers/delete?id={jobseeker.Id}")">Delete</a>
+        <a href="@($"/jobseekers/edit/{jobseeker.Id}")">Edit</a> |
+        <a href="@($"/jobseekers/details/{jobseeker.Id}")">Details</a> |
+        <a href="@($"/jobseekers/delete/{jobseeker.Id}")">Delete</a>
     </TemplateColumn>
+
 </QuickGrid>
 
 @code {
