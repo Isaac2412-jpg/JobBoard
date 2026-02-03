@@ -3,7 +3,9 @@
 @using Microsoft.EntityFrameworkCore
 @using JobBoard.Components.Domain
 @using JobBoard.Data
-
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IDbContextFactory<JobBoardContext> DbFactory
 
 <PageTitle>Job Listings</PageTitle>
@@ -17,10 +19,6 @@
                @bind="SearchText"
                @bind:event="oninput" />
     </div>
-
-    <AuthorizeView Roles="Admin, Employer">
-        <a href="/joblistings/create" class="btn btn-primary">Create New</a>
-    </AuthorizeView>
 </div>
 
 @if (AllJobListings == null)
@@ -89,22 +87,25 @@ else
                                     Details
                                 </a>
 
-                                <!-- Only Admin/Employer sees Edit/Delete -->
-                                <AuthorizeView Roles="Admin, Employer">
-                                    <div class="d-flex gap-2">
-                                        <a class="btn btn-outline-secondary w-100"
-                                           href="@($"/joblistings/edit/{j.Id}")">
-                                            Edit
-                                        </a>
-                                        <a class="btn btn-outline-danger w-100"
-                                           href="@($"/joblistings/delete/{j.Id}")">
-                                            Delete
-                                        </a>
-                                    </div>
+                                <!-- Admin/Employer can see buttons, BUT Employer can only edit/delete their own listings -->
+                                <AuthorizeView Roles="Admin,Employer">
+                                    @if (IsAdmin || (CurrentEmployerId.HasValue && j.EmployerId == CurrentEmployerId.Value))
+                                    {
+                                        <div class="d-flex gap-2">
+                                            <a class="btn btn-outline-secondary w-100"
+                                               href="@($"/joblistings/edit/{j.Id}")">
+                                                Edit
+                                            </a>
+                                            <a class="btn btn-outline-danger w-100"
+                                               href="@($"/joblistings/delete/{j.Id}")">
+                                                Delete
+                                            </a>
+                                        </div>
 
-                                    <div class="muted small mt-2">
-                                        Employer ID: @j.EmployerId
-                                    </div>
+                                        <div class="muted small mt-2">
+                                            Employer ID: @j.EmployerId
+                                        </div>
+                                    }
                                 </AuthorizeView>
                             </div>
                         </div>
@@ -118,6 +119,9 @@ else
 @code {
     private List<JobListing>? AllJobListings;
     private string SearchText = "";
+    private int? CurrentEmployerId;
+    private bool IsAdmin;
+    private bool IsEmployer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,6 +131,23 @@ else
             .AsNoTracking()
             .Include(j => j.Employer)
             .ToListAsync();
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        IsAdmin = user.IsInRole("Admin");
+        IsEmployer = user.IsInRole("Employer");
+
+        if (IsEmployer)
+        {
+            var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var employer = await context.Employer
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.IdentityUserId == userId);
+
+            CurrentEmployerId = employer?.Id;
+        }
     }
 
     private IEnumerable<JobListing> FilteredJobListings
@@ -139,7 +160,6 @@ else
             var tokens = SearchText
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-            // AND logic: every word must match at least 1 field
             return AllJobListings.Where(j => tokens.All(t =>
                 ContainsCI(j.Title, t) ||
                 ContainsCI(j.JobType, t) ||

@@ -1,39 +1,140 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-@page "/"
+﻿@page "/"
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Authorization
+
 
 <PageTitle>Home</PageTitle>
 
-<AuthorizeView>
-    <NotAuthorized>
-        <h1>Hello, User!</h1>
-        <p>Please press Login if you already have an account.</p>
-        <a class="btn btn-primary" href="Account/Login"">Login</a>
-    </NotAuthorized>
+<div class="container py-5">
+    <AuthorizeView>
+        <NotAuthorized>
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <h1 class="fw-bold display-6 mb-2">Find jobs that fit your life</h1>
+                    <p class="text-muted fs-5 mb-4">
+                        Browse job listings and apply in a few clicks. Employers can post openings and manage applications easily.
+                    </p>
 
-    <Authorized>
-        <h1>Hello @GetRoleName()!</h1>
-        <p>
-            You are logged in as
-            <strong>@context.User.Identity?.Name</strong>
-        </p>
-    </Authorized>
-</AuthorizeView>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-primary px-4" href="/Account/Login">Login</a>
+                        <a class="btn btn-outline-secondary px-4" href="/Account/Register">Create Account</a>
+                        <a class="btn btn-link px-2" href="/joblistings">Browse Jobs</a>
+                    </div>
+
+                    <div class="border-top mt-4 pt-4">
+                        <div class="row text-center g-3">
+                            <div class="col-4">
+                                <div class="fw-bold fs-4">500+</div>
+                                <div class="text-muted small">Job Listings</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="fw-bold fs-4">120+</div>
+                                <div class="text-muted small">Companies</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="fw-bold fs-4">2,000+</div>
+                                <div class="text-muted small">Applicants</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="fw-semibold mb-2">Get started</h5>
+                            <p class="text-muted mb-3">
+                                Log in to post jobs, apply for roles, and track application status.
+                            </p>
+
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-primary" href="/Account/Login">Login</a>
+                                <a class="btn btn-outline-secondary" href="/Account/Register">Create Account</a>
+                                <a class="btn btn-outline-dark" href="/joblistings">Browse Job Listings</a>
+                            </div>
+
+                            <div class="text-muted small mt-3">
+                                Tip: Use the search bar in Job Listings to filter by title, location, or industry.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </NotAuthorized>
+
+        <Authorized Context="auth">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                            <div>
+                                <h2 class="fw-bold mb-1">Welcome back, @GetRoleName(auth.User)!</h2>
+                                <div class="text-muted">
+                                    Logged in as <strong>@auth.User.Identity?.Name</strong>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <a class="btn btn-primary" href="/joblistings">Browse Jobs</a>
+
+                                @if (auth.User.IsInRole("Employer") || auth.User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-outline-secondary" href="/joblistings/create">Post a Job</a>
+                                    <a class="btn btn-outline-dark" href="/applications">View Applications</a>
+                                }
+                                else if (auth.User.IsInRole("JobSeeker"))
+                                {
+                                    <a class="btn btn-outline-secondary" href="/applications">My Applications</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-semibold mb-2">Quick Actions</h5>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-primary" href="/joblistings">View Job Listings</a>
+
+                                @if (auth.User.IsInRole("Employer") || auth.User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-outline-secondary" href="/joblistings/create">Create New Listing</a>
+                                }
+
+                                <a class="btn btn-outline-dark" href="/feedbacks/create">Send Feedback</a>
+                            </div>
+                            <div class="text-muted small mt-3">
+                                These shortcuts help users reach key features faster.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-semibold mb-2">What’s new</h5>
+                            <ul class="text-muted mb-0">
+                                <li>Improved job listing permissions (employers only manage their own listings)</li>
+                                <li>Search job listings by title, job type, industry, and location</li>
+                                <li>Cleaner layout to feel more like a real job platform</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</div>
 
 @code {
-    private string GetRoleName()
+    private static string GetRoleName(System.Security.Claims.ClaimsPrincipal user)
     {
-        var user = AuthenticationStateProvider
-            .GetAuthenticationStateAsync()
-            .Result
-            .User;
-
         if (user.IsInRole("Admin")) return "Admin";
         if (user.IsInRole("Employer")) return "Employer";
         if (user.IsInRole("JobSeeker")) return "Job Seeker";
-
         return "User";
     }
 }
